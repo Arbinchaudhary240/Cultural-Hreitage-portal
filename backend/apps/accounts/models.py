@@ -18,3 +18,17 @@ class User(AbstractUser):
     def __str__(self):
         return self.full_name
     
+class Contribution(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    contributer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contributions')
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    image = models.ImageField(upload_to='contributions/', blank=True, null=True)
+    audio = models.FileField(upload_to='contributions/', blank=True, null=True)
+    vedio = models.FileField(upload_to='contributions/', blank=True, null=True)
+    addwd_at = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title

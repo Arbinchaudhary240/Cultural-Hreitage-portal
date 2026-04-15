@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Contribution
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +22,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
+class ContributionSerializer(serializers.ModelSerializer):
+    contributer = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Contribution
+        fields = ["id", "contributer", "title", "description", "image", "audio", "video", "added_at"]
+        read_only_fields = ["id", "added_at"]
+        
