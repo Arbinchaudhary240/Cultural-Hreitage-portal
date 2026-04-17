@@ -2,10 +2,15 @@ import uuid
 import pytest
 from django.urls import reverse
 from rest_framework import status
-from .models import User
+from .models import User, Contribution
+from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 class TestAccounts:
+
+    @pytest.fixture
+    def api_client(self):
+        return APIClient()
 
     def test_user_creation(self):
         user = User.objects.create_user(
@@ -18,7 +23,7 @@ class TestAccounts:
         assert isinstance(user.id, uuid.UUID)
         assert user.is_active is True
 
-    def test_registration_api(self, client):
+    def test_registration_api(self, api_client):
         url = reverse('register')
         data = {
             "email" : "newuser@example.com",
@@ -26,12 +31,12 @@ class TestAccounts:
             "full_name" : "New User",
             "password" : "newpassword123"
         }
-        response = client.post(url, data, content_type = "application/json")
+        response = api_client.post(url, data, content_type = "application/json")
 
         assert response.status_code == status.HTTP_201_CREATED
         assert User.objects.filter(email="newuser@example.com").exists()
 
-    def test_user_login(self, client):
+    def test_user_login(self, api_client):
         user = User.objects.create_user(
             email = "loginuser@example.com",
             username = "loginuser",
@@ -41,7 +46,33 @@ class TestAccounts:
         url = reverse("token_obtain_pair")
         data = {"email" : "loginuser@example.com", "password" : "loginpassword123"}
 
-        response = client.post(url, data)
+        response = api_client.post(url, data)
         assert response.status_code == status.HTTP_200_OK
         assert "access" in response.data
         assert "refresh" in response.data
+
+    
+    def test_user_contribution(self, api_client):
+        user = User.objects.create_user(
+            email="contributer@example.com",
+            username="Contributer",
+            password="contributer123"
+        )
+
+        login_url = reverse("token_obtain_pair")
+        login_data = {"email": "contributer@example.com", "password": "contributer123"}
+        response = api_client.post(login_url, login_data)
+        
+        assert response.status_code == status.HTTP_200_OK
+        token = response.data["access"]
+
+        api_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        url = reverse("contribute")
+        contribution_data = {
+            "title": "siruwa",
+            "description": "this is celebreted in new year"
+        }
+        response = api_client.post(url, contribution_data)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert Contribution.objects.filter(title="siruwa").exists()

@@ -27,7 +27,7 @@ class Contribution(models.Model):
     image = models.ImageField(upload_to='contributions/', blank=True, null=True)
     audio = models.FileField(upload_to='contributions/', blank=True, null=True)
     vedio = models.FileField(upload_to='contributions/', blank=True, null=True)
-    addwd_at = models.DateTimeField(auto_now_add=True)
+    added_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
