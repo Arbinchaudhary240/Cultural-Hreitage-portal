@@ -76,3 +76,26 @@ class TestAccounts:
         response = api_client.post(url, contribution_data)
         assert response.status_code == status.HTTP_201_CREATED
         assert Contribution.objects.filter(title="siruwa").exists()
+    
+    def test_double_user_creation_with_same_email(self, api_client):
+        url = reverse('register')
+        data_1 = {
+            "email": "sameuser@example.com",
+            "full_name": "sameuser",
+            "username": "sameuser",
+            "password": "user1_9898"
+        }
+        response1 = api_client.post(url, data_1, content_type = "application/json")
+        assert response1.status_code == status.HTTP_201_CREATED
+        assert User.objects.filter(email="sameuser@example.com").exists()
+        print(response1.data)
+
+        data_2 = {
+            "email": "sameuser@example.com",
+            "full_name": "sameuser",
+            "username": "sameuser",
+            "password": "user2_9898" 
+        }
+        response2 = api_client.post(url, data_2, content_type = "application/json")
+        assert response2.status_code == status.HTTP_400_BAD_REQUEST
+        
