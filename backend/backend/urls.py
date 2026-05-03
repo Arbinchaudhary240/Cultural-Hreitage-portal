@@ -22,4 +22,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('apps.accounts.urls')),
+    path('api/contribution/', include('apps.contribution.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
