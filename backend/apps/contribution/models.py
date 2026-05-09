@@ -14,9 +14,18 @@ class Contribution(models.Model):
 
     image = models.ImageField(upload_to='contributions/', blank=True, null=True)
     audio = models.FileField(upload_to='contributions/', blank=True, null=True)
-    vedio = models.FileField(upload_to='contributions/', blank=True, null=True)
+    video = models.FileField(upload_to='contributions/', blank=True, null=True)
     added_at = models.DateTimeField(auto_now_add=True)
-    is_verified = models.BooleanField(default=False)
+    # is_verified = models.BooleanField(default=False)
+    PENDING = 'P'
+    APPROVED = 'A'
+    REJECTED = 'R'
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+    ]
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=PENDING)
 
     def __str__(self):
         return self.title
