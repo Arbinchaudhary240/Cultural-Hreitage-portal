@@ -42,7 +42,7 @@ class TestContributions:
 
         api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-        url = reverse("contribution")
+        url = reverse("contribution:contribute")
         data = {
             "title": "siruwa",
             "description": "SIRUWA is a festival celebrated in  new year"
@@ -50,3 +50,16 @@ class TestContributions:
         response = api_client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
         assert Contribution.objects.filter(title="siruwa").exists()
+
+    def test_user_cannot_approve_own_contribution(self, api_client):
+        user = User.objects.create_user(username="hackerman", password="password123")
+        contribution = Contribution.objects.create(
+            contributer=user, 
+            title="Test", 
+            status="pending"
+        )
+        api_client.force_authenticate(user=user)
+        url = reverse("contribution:detail", kwargs={"pk": contribution.id})
+        response = api_client.patch(url, {"status": "approved"}, format='json')
+        contribution.refresh_from_db()
+        assert contribution.status == "pending"

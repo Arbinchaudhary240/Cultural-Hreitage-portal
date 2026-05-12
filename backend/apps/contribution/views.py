@@ -15,3 +15,14 @@ class ContributionCreateView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(contributer=self.request.user)
+
+class ContributionUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Contribution.objects.all()
+    serializer_class = ContributionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        if "status" in serializer.validated_data and not self.request.user.is_staff:
+            raise self.permission_denied("Only administrators can change the contribution status.")
+        
+        serializer.save()
