@@ -10,7 +10,7 @@ class Contribution(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(1000)
 
     image = models.ImageField(upload_to='contributions/', blank=True, null=True)
     audio = models.FileField(upload_to='contributions/', blank=True, null=True)

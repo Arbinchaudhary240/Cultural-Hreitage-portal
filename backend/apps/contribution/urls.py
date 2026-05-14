@@ -4,6 +4,6 @@ from .views import ContributionCreateView, ContributionUpdateView
 app_name = 'contribution'
 
 urlpatterns = [
-    path("contribution", ContributionCreateView.as_view(), name='contribute'),
+    path("", ContributionCreateView.as_view(), name='contribute'),
     path("<uuid:pk>/", ContributionUpdateView.as_view(), name="detail"),
 ]
