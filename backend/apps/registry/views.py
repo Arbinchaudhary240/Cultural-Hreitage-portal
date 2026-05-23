@@ -1,21 +1,15 @@
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Category, HeritageItem
-from .seriakizers import CategorySerializer, HeritageItemSerializer
+from .serializers import CategorySerializer, HeritageItemSerializer
 
-class CategoryVeiwSet(viewsets.ReadOnlyModelViewSet):
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = "slug"
 
-class HeritageItemVeiwSet(viewsets.ReadOnlyModelViewSet):
+class HeritageItemViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = HeritageItemSerializer
-
-    filter_backends = [
-        DjangoFilterBackend,   # For exact matches (Category)
-        filters.SearchFilter,  # For text search (Name/Description)
-        filters.OrderingFilter # To sort by newest/oldest
-    ]
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category__slug'] 
