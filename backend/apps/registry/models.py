@@ -26,4 +26,9 @@ class HeritageItem(models.Model):
         )
     metadata = models.JSONField(default=dict, blank=True)
     
-    
+    community_tags = models.ManyToManyField(
+        'sanskriti.EthnicityProfile',
+        related_name='heritage_items',
+        blank=True,
+        help_text="Tag which religions, castes, or subcastes this heritage item belongs to."
+    )

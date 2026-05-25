@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "apps.accounts",
     "apps.contribution",
     "apps.registry",
+    "apps.sanskriti",
 ]
 
 MIDDLEWARE = [

@@ -5,7 +5,8 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug']
-
+        read_only_fields = ['id', 'name']
+        
 class HeritageItemSerializer(serializers.ModelSerializer):
     contributor_description = serializers.CharField(source='contribution.description', read_only=True)
     video = serializers.FileField(source='contribution.video', read_only=True)

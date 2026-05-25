@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/accounts/', include('apps.accounts.urls')),
     path('api/contribution/', include('apps.contribution.urls')),
     path('api/registry/', include('apps.registry.urls')),
+    path('api/sanskriti/', include('apps.sanskriti.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
